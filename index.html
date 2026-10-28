@@ -8,33 +8,28 @@
 </head>
 
 <body>
-    <h1>My Task Manager</h1>
-    <h2>Add a Task</h2>
-    <input type="text" id="taskInput"
-           placeholder="Enter a task">
-    <button id="addButton">Add Task</button>
-    <br> 
-    <br> 
-    <label for = "priorityTasks">Priority Level:</label> 
-    <select id = "priorityTasks"> 
-            <option value = "1">1</option>   
-            <option value = "2">2</option>
-            <option value = "3">3</option>
-            <option value = "4">4</option>
-            <option value = "5">5</option>
-    </select> 
-    <br> 
-    <br> 
-    <label for = "date">Task Date</label>
-    <input type = "date" id = "taskDate" name = "start" class = "heading-date-picker"> 
     
-    <div class = "tasks-sub-heading"> 
-        <h2>Today's Tasks:</h2> 
-        <select class = "heading-dropdown" id = "sortTasks"> 
+    <header class="top-bar">
+        <h1>My Task Manager</h1>
+    </header>
+    <div class = "add-task-bar">
+        <h2>Add a Task</h2> 
+        <input type="text" id="taskInput"
+           placeholder="Enter a task">
+        <input id = "taskDate" type = "date"> 
+        <input id = "priorityTasks" type = "number" min = "1" max = "7"> 
+        <button id="addButton">Add Task</button>
+    </div>
+    
+    <h2>Today's Tasks:</h2> 
+    <label for = "sortTasks">Sort by:</label>
+    <select class = "heading-dropdown" id = "sortTasks"> 
             <option value = "priority">Priority</option>   
             <option value = "date">Due Date</option>
             <option value = "alphabetical">Alphabetical</option>
-        </select> 
+    </select> 
+    <div class = "tasks-sub-heading" id = "taskList"> 
+        <script src="script.js"></script>
     </div>
     <ul id="taskList"></ul>
 </body>

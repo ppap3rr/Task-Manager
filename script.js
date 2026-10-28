@@ -25,7 +25,9 @@ Nice to have:
 /*
 Todo: 
  - Error checking for valid inputs
-
+ - Make a formula to determine the priority + time due to determine color of the task 
+ - BRIGHT RED when task is overdue 
+ - 
 */ 
 
 const taskNameInput = document.getElementById("taskInput");
@@ -38,6 +40,7 @@ const taskList = document.getElementById("taskList");
 // localStorage.removeItem("tasks"); 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []; 
 
+// Adds functionality to the button 
 addButton.addEventListener("click", function() {
     const task = taskNameInput.value.trim();
     const priority = taskPriority.value; 
@@ -79,6 +82,27 @@ function addTask(title, priority, dueDate) {
     renderTasks(); 
 }
 
+function createTaskCard(task) {
+    const card = document.createElement("div"); 
+    const title = document.createElement("lab"); 
+    title.textContent = task.title; 
+
+    const dueDate = document.createElement("p"); 
+    dueDate.textContent = `Due: ${task.dueDate}`; 
+
+    const priority = document.createElement("p"); 
+    priority.textContent = `Priority: ${task.priority}`; 
+
+    const completion = document.createElement("p"); 
+    completion.textContent = task.completed ? "Completed" : "Not Completed"; 
+    
+    card.appendChild(title); 
+    card.appendChild(dueDate); 
+    card.appendChild(priority); 
+    card.appendChild(completion); 
+    return card;  
+}
+
 function removeTask(id) {
     tasks = tasks.filter(task => task.id != id); 
 }
@@ -100,11 +124,14 @@ Alphabetical Sort
  - Priority sort (both high --> low and low --> high)
  - Due date 
 */ 
-
 function renderTasks() {
+    const taskList = document.getElementById("taskList"); 
     taskList.innerHTML = ""; 
     const sortedTasks = [...tasks]; 
+    console.log(sortSelect.value); 
     if (sortSelect.value === "priority") {
+        // a and b represent two elements => b-a means higher priorities come first
+        // => is the shorthand way to write a function
         sortedTasks.sort((a, b) => b.priority - a.priority); 
     } else if (sortSelect.value === "date") {
         sortedTasks.sort((a, b) => 
@@ -115,11 +142,9 @@ function renderTasks() {
             a.title.localeCompare(b.title)
         );
     }
-
-    tasks.forEach(task => {
-        const li = document.createElement("li"); 
-        li.textContent = task.title; 
-        taskList.appendChild(li); 
+    sortedTasks.forEach(task => {
+        const card = createTaskCard(task); 
+        taskList.appendChild(card); 
     })
 }
 
@@ -127,24 +152,24 @@ updateDate();
 
 renderTasks(); 
 
-function removeObjectStyleTasks() {
-    // 1. Retrieve the tasks array from localStorage
-    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+// function removeObjectStyleTasks() {
+//     // 1. Retrieve the tasks array from localStorage
+//     let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-    // 2. Filter: Keep a task ONLY if both priority and date are strings
-    let cleanTasks = tasks.filter(task => {
-        const isPriorityString = typeof task.priority === 'string';
-        const isDateString = typeof task.date === 'string';
+//     // 2. Filter: Keep a task ONLY if both priority and date are strings
+//     let cleanTasks = tasks.filter(task => {
+//         const isPriorityString = typeof task.priority === 'string';
+//         const isDateString = typeof task.date === 'string';
 
-        // Keep the task only if both values are valid strings
-        return isPriorityString && isDateString;
-    });
+//         // Keep the task only if both values are valid strings
+//         return isPriorityString && isDateString;
+//     });
 
-    // 3. Save the repaired array back to localStorage
-    localStorage.setItem("tasks", JSON.stringify(cleanTasks));
+//     // 3. Save the repaired array back to localStorage
+//     localStorage.setItem("tasks", JSON.stringify(cleanTasks));
 
-    // Print results to your console
-    console.log(`Cleanup complete! Kept ${cleanTasks.length} valid tasks. Removed ${tasks.length - cleanTasks.length} broken object-style tasks.`);
-}
+//     // Print results to your console
+//     console.log(`Cleanup complete! Kept ${cleanTasks.length} valid tasks. Removed ${tasks.length - cleanTasks.length} broken object-style tasks.`);
+// }
 
 console.log(tasks); 
