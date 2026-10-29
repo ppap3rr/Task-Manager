@@ -27,7 +27,7 @@ Todo:
  - Error checking for valid inputs
  - Make a formula to determine the priority + time due to determine color of the task 
  - BRIGHT RED when task is overdue 
- - 
+ - checkmark / crossout for completion
 */ 
 
 const taskNameInput = document.getElementById("taskInput");
@@ -84,8 +84,24 @@ function addTask(title, priority, dueDate) {
 
 function createTaskCard(task) {
     const card = document.createElement("div"); 
-    const title = document.createElement("lab"); 
+    card.classList.add("task-card"); 
+
+    const checkbox = document.createElement("input"); 
+    checkbox.type = "checkbox"; 
+    checkbox.checked = task.completed; 
+
+    checkbox.addEventListener("change", () => {
+        task.completed = checkbox.checked; 
+        saveTasks(); 
+        renderTasks(); 
+    })
+
+    const title = document.createElement("h2"); 
     title.textContent = task.title; 
+
+    if (task.completed) {
+        title.classList.add("completed"); 
+    }
 
     const dueDate = document.createElement("p"); 
     dueDate.textContent = `Due: ${task.dueDate}`; 
@@ -96,6 +112,7 @@ function createTaskCard(task) {
     const completion = document.createElement("p"); 
     completion.textContent = task.completed ? "Completed" : "Not Completed"; 
     
+    card.appendChild(checkbox); 
     card.appendChild(title); 
     card.appendChild(dueDate); 
     card.appendChild(priority); 

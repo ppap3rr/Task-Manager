@@ -8,29 +8,38 @@
 </head>
 
 <body>
-    
-    <header class="top-bar">
-        <h1>My Task Manager</h1>
-    </header>
-    <div class = "add-task-bar">
-        <h2>Add a Task</h2> 
-        <input type="text" id="taskInput"
-           placeholder="Enter a task">
-        <input id = "taskDate" type = "date"> 
-        <input id = "priorityTasks" type = "number" min = "1" max = "7"> 
-        <button id="addButton">Add Task</button>
-    </div>
-    
-    <h2>Today's Tasks:</h2> 
-    <label for = "sortTasks">Sort by:</label>
-    <select class = "heading-dropdown" id = "sortTasks"> 
-            <option value = "priority">Priority</option>   
-            <option value = "date">Due Date</option>
-            <option value = "alphabetical">Alphabetical</option>
-    </select> 
-    <div class = "tasks-sub-heading" id = "taskList"> 
-        <script src="script.js"></script>
-    </div>
-    <ul id="taskList"></ul>
+    <div> 
+        <aside class = "sidebar"> 
+            <header class="top-bar">
+                <h1>My Task Manager</h1>
+            </header>
+            <nav> 
+                <button>All Tasks</button>
+                <button>Today</button>
+                <button>Upcoming</button>
+                <button>Completed</button>      
+            </nav>  
+        </aside> 
+        <div class = "add-task-bar">
+            <h2>Add a Task</h2> 
+            <input type="text" id="taskInput"
+            placeholder="Enter a task">
+            <input id = "taskDate" type = "date"> 
+            <input id = "priorityTasks" type = "number" min = "1" max = "7"> 
+            <button id="addButton">Add Task</button>
+        </div>
+        
+        <h2>Today's Tasks:</h2> 
+        <label for = "sortTasks">Sort by:</label>
+        <select class = "heading-dropdown" id = "sortTasks"> 
+                <option value = "priority">Priority</option>   
+                <option value = "date">Due Date</option>
+                <option value = "alphabetical">Alphabetical</option>
+        </select> 
+        <div class = "tasks-sub-heading" id = "taskList"> 
+            <script src="script.js"></script>
+        </div>
+        <ul id="taskList"></ul>
+    <div> 
 </body>
 </html>
