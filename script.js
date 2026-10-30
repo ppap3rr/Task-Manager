@@ -39,8 +39,32 @@ const taskList = document.getElementById("taskList");
 
 // localStorage.removeItem("tasks"); 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []; 
+let currentView = "all"; 
 
-// Adds functionality to the button 
+// TOPBAR
+function setupTopButtons(buttonId, view) {
+    const button = document.getElementById(buttonId); 
+    button.addEventListener("click", () => {
+        currentView = view; 
+        updateActiveButton(document.getElementById(buttonId)); 
+        renderTasks(); 
+    })
+}
+setupTopButtons("allTasksButton", "all") ;
+setupTopButtons("completedButton", "complete"); 
+setupTopButtons("upcomingButton", "upcoming");
+setupTopButtons("todayButton", "today");
+
+// Need functionality for the other buttons (Upcoming, daily, reminders, statistics)
+
+function updateActiveButton(selectedButton) {
+    document.querySelectorAll(".topbar button").forEach(
+        button => button.classList.remove("active")
+    ); 
+    console.log(selectedButton); 
+    selectedButton.classList.add("active"); 
+}
+
 addButton.addEventListener("click", function() {
     const task = taskNameInput.value.trim();
     const priority = taskPriority.value; 
@@ -60,6 +84,8 @@ sortSelect.addEventListener("change", () => {
     renderTasks(); 
 });
 
+
+
 function updateDate() {
     const taskDate = document.getElementById("taskDate"); 
     const today = new Date(); 
@@ -69,17 +95,44 @@ function updateDate() {
     taskDate.value = `${yyyy}-${mm}-${dd}`; 
 }
 
-function addTask(title, priority, dueDate) {
-    const task = {
-        id: crypto.randomUUID(), 
-        title: title, 
-        priority: priority, 
-        completed: false, 
-        dueDate: dueDate
-    }; 
-    tasks.push(task); 
-    saveTasks(); 
-    renderTasks(); 
+/* 
+Alphabetical Sort
+ - Priority sort (both high --> low and low --> high)
+ - Due date 
+*/ 
+function renderTasks() {
+    const taskList = document.getElementById("taskList"); 
+    taskList.innerHTML = ""; 
+    let visibleTasks = tasks; 
+    // FILTERING BASED UPON RESPECTIVE PAGES
+    if (currentView === "completed") {
+        visibleTasks = tasks.filter(task => task.completed); 
+    } else if (currentView === "today") {
+        visibleTasks = tasks.filter(task => taskDate.value === task.dueDate); 
+    } else if (currentView === "upcoming") {
+        visibleTasks = tasks.filter(task => task.dueDate > taskDate.value && !task.completed); 
+    }
+    if (currentView === "")
+    console.log(sortSelect.value);
+
+    // SORTING 
+    if (sortSelect.value === "priority") {
+        // a and b represent two elements => b-a means higher priorities come first
+        // => is the shorthand way to write a function
+        visibleTasks.sort((a, b) => b.priority - a.priority); 
+    } else if (sortSelect.value === "date") {
+        visibleTasks.sort((a, b) => 
+            a.dueDate.localeCompare(b.dueDate) 
+        );
+    } else if (sortSelect.value === "alphabetical") {
+        visibleTasks.sort((a, b) => 
+            a.title.localeCompare(b.title)
+        );
+    }
+    visibleTasks.forEach(task => {
+        const card = createTaskCard(task); 
+        taskList.appendChild(card); 
+    })
 }
 
 function createTaskCard(task) {
@@ -120,6 +173,21 @@ function createTaskCard(task) {
     return card;  
 }
 
+
+// TASK INTERACTIONS
+function addTask(title, priority, dueDate) {
+    const task = {
+        id: crypto.randomUUID(), 
+        title: title, 
+        priority: priority, 
+        completed: false, 
+        dueDate: dueDate
+    }; 
+    tasks.push(task); 
+    saveTasks(); 
+    renderTasks(); 
+}
+
 function removeTask(id) {
     tasks = tasks.filter(task => task.id != id); 
 }
@@ -136,34 +204,7 @@ function saveTasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks)); 
 }
 
-/* 
-Alphabetical Sort
- - Priority sort (both high --> low and low --> high)
- - Due date 
-*/ 
-function renderTasks() {
-    const taskList = document.getElementById("taskList"); 
-    taskList.innerHTML = ""; 
-    const sortedTasks = [...tasks]; 
-    console.log(sortSelect.value); 
-    if (sortSelect.value === "priority") {
-        // a and b represent two elements => b-a means higher priorities come first
-        // => is the shorthand way to write a function
-        sortedTasks.sort((a, b) => b.priority - a.priority); 
-    } else if (sortSelect.value === "date") {
-        sortedTasks.sort((a, b) => 
-            a.dueDate.localeCompare(b.dueDate) 
-        );
-    } else if (sortSelect.value === "alphabetical") {
-        sortedTasks.sort((a, b) => 
-            a.title.localeCompare(b.title)
-        );
-    }
-    sortedTasks.forEach(task => {
-        const card = createTaskCard(task); 
-        taskList.appendChild(card); 
-    })
-}
+
 
 updateDate(); 
 

@@ -45,18 +45,21 @@ button {
     font-size: 14px; 
 }
 
-.top-bar {
+.heading {
     background-color: #252b38; 
     color: white; 
+    /*Between text and box*/ 
     padding: 15px 30px; 
-
     display: flex; 
     align-items: center; 
     justify-content: space-between; 
+    border-radius: 7px;
+    /* Between box and other elements    */
+    margin-bottom: 3px;
 }
 
-.top-bar h1, 
-.top-bar p {
+.heading h1, 
+.heading p {
     margin: 0; 
 }
 
@@ -66,7 +69,7 @@ button {
     border-radius: 20px; 
     border: 1px solid #ddd; 
     margin-bottom: 20px; 
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 .task-card {
@@ -104,10 +107,10 @@ button {
     color: gray; 
 }
 
-/*Side Bar*/ 
-.sidebar button {
+/*Top Bar*/ 
+.topbar button {
     /* background: transparent; */
-    color: white;
+    color: #3b4657;
     border: none;
     text-align: left;
     padding: 12px;
@@ -115,8 +118,15 @@ button {
     border-radius: 6px;
 }
 
-.sidebar button:hover {
-    background-color: #3b4657; 
+
+.topbar button:hover {
+    background-color: white; 
+}
+
+.topbar button.active {
+    background-color: #252b38 ;
+    font-weight: bold; 
+    color: white; 
 }
 
 .main-content {
