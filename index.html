@@ -26,13 +26,13 @@
         <div class = "add-task-bar">
             <div class = "add-task-heading"> 
                 <h2>Add a Task</h2> 
-                <!-- <div> 
+                <div id = "dailyCheck" class = "task-card"> 
                     <label for = "dailyTask">Daily Task:</label>
                     <label class = "switch"> 
                         <input type = "checkbox" id = "dailyTask"> 
                         <span class = "slider"></span>
                     </label>
-                </div> -->
+                </div>
             </div>
             <input type="text" id="taskInput" placeholder="Enter a task">
             <input id = "taskDate" type = "date"> 
@@ -40,7 +40,7 @@
             <button id="addButton">Add Task</button>
         </div>
         <div class = "todayTaskHeader">
-            <h2>All Tasks:</h2> 
+            <h2 id = "tasksHeader">All Tasks:</h2> 
             <div> 
                 <label for = "sortTasks">Sort by:</label>
                 <select class = "heading-dropdown" id = "sortTasks"> 

@@ -28,7 +28,9 @@ Todo:
  - Make a formula to determine the priority + time due to determine color of the task 
  - BRIGHT RED when task is overdue 
  - checkmark / crossout for completion
- - recurring
+ - recurring / daily tasks
+ - NEED TO ADD TIME TO TASKS 
+ - Depending on priority, add tasks to today's tasks
 */ 
 
 const taskNameInput = document.getElementById("taskInput");
@@ -37,25 +39,41 @@ const taskDate = document.getElementById("taskDate");
 const addButton = document.getElementById("addButton");
 const sortSelect = document.getElementById("sortTasks"); 
 const taskList = document.getElementById("taskList");
-const dailyTask = document.getElementById("dailyTask"); 
+const dailyTask = document.getElementById("dailyTask");
+const tasksHeader = document.getElementById("tasksHeader");  
+const dailyCheck = document.getElementById("dailyCheck");
 
 // localStorage.removeItem("tasks"); 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []; 
 let currentView = "all"; 
+dailyCheck.classList.add("hidden"); 
+
+updateActiveButton(document.getElementById("allTasksButton")); 
 
 // TOPBAR
-function setupTopButtons(buttonId, view) {
+function setupTopButtons(buttonId, header, view) {
     const button = document.getElementById(buttonId); 
     button.addEventListener("click", () => {
         currentView = view; 
+        tasksHeader.textContent = header; 
         updateActiveButton(document.getElementById(buttonId)); 
+        if (buttonId === "dailyButton") {
+            // revealing the daily task check
+            dailyCheck.classList.remove("hidden");  
+            // TODO NEED TO REMOVE AND ADD OTHER FEATURES ALONGSIDE DAILY TASK
+        } else {
+            // any other button removes the daily task feature
+            dailyCheck.classList.add("hidden"); 
+        }
         renderTasks(); 
     })
 }
-setupTopButtons("allTasksButton", "all") ;
-setupTopButtons("completedButton", "complete"); 
-setupTopButtons("upcomingButton", "upcoming");
-setupTopButtons("todayButton", "today");
+
+setupTopButtons("allTasksButton", "All Tasks", "all") ;
+setupTopButtons("completedButton", "Completed Tasks", "completed"); 
+setupTopButtons("upcomingButton", "Upcoming Tasks", "upcoming");
+setupTopButtons("todayButton", "Today's Tasks", "today");
+setupTopButtons("dailyButton", "Daily Tasks", "daily");
 
 // Need functionality for the other buttons (Upcoming, daily, reminders, statistics)
 function updateActiveButton(selectedButton) {
@@ -106,15 +124,17 @@ function renderTasks() {
     taskList.innerHTML = ""; 
     let visibleTasks = tasks; 
     // FILTERING BASED UPON RESPECTIVE PAGES
-    if (currentView === "completed") {
+    if (currentView === "all") {
+        visibleTasks = tasks.filter(task => !task.completed); 
+    } else if (currentView === "completed") {
         visibleTasks = tasks.filter(task => task.completed); 
     } else if (currentView === "today") {
         visibleTasks = tasks.filter(task => taskDate.value === task.dueDate); 
     } else if (currentView === "upcoming") {
         visibleTasks = tasks.filter(task => task.dueDate > taskDate.value && !task.completed); 
+    } else if (currentView === "daily") {
+        visibleTasks = tasks.filter(task => task.daily === true); 
     }
-    if (currentView === "")
-    console.log(sortSelect.value);
 
     // SORTING 
     if (sortSelect.value === "priority") {
@@ -137,6 +157,8 @@ function renderTasks() {
 }
 
 function createTaskCard(task) {
+    // today's date formatted for comparison
+    const today = new Date().toISOString().split("T")[0];
     const card = document.createElement("div"); 
     card.classList.add("task-card"); 
 
@@ -146,6 +168,7 @@ function createTaskCard(task) {
 
     const removeButton = document.createElement("button");
     removeButton.textContent = "Remove"; 
+    removeButton.type = "remove"; 
     removeButton.addEventListener("click", () => {
         removeTask(task.id); 
         renderTasks(); 
@@ -182,6 +205,11 @@ function createTaskCard(task) {
     card.appendChild(dueDate); 
     card.appendChild(priority); 
     card.appendChild(completion); 
+    // adds today tag for css styling
+    if (task.dueDate < today && !task.completed) {
+        card.classList.add("overdue");
+    }
+
     return card;  
 }
 
@@ -192,13 +220,15 @@ function createFinishedTaskCard(task) {
 
 
 // TASK INTERACTIONS
-function addTask(title, priority, dueDate) {
+function addTask(title, priority, dueDate, daily, recurring) {
     const task = {
         id: crypto.randomUUID(), 
         title: title, 
         priority: priority, 
         completed: false, 
-        dueDate: dueDate
+        dueDate: dueDate, 
+        daily: false, 
+        recurring: false 
     }; 
     tasks.push(task); 
     saveTasks(); 

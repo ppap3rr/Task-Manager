@@ -117,6 +117,11 @@ button {
     padding: 15px; 
 }
 
+.task-card.overdue {
+    background-color: #ffe0e0;
+    border: 1px solid #ff7777; 
+}
+
 /*Remove default spacing*/
 .task-card h3, 
 .task-card p{
@@ -142,6 +147,11 @@ button {
     accent-color: green;
 }
 
+.task-card button[type = "remove"] {
+    background-color: #cf2929;
+    border: 1px solid #ff7777; 
+}
+
 /* Buttons */
 button {
     cursor: pointer; 
@@ -158,4 +168,8 @@ button {
     min-width: 0;
     padding: 30px;
     background-color: #f5f5f5;
+}
+
+.hidden {
+    display: none; 
 }
