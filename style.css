@@ -11,6 +11,92 @@ h1 {
     text-align: center; 
 }
 
+/* My Task Manager */ 
+.heading {
+    background-color: #252b38; 
+    color: white; 
+    /*Between text and box*/ 
+    padding: 15px 30px; 
+    display: flex; 
+    align-items: center; 
+    /* equalizes space between elements */
+    justify-content: space-between; 
+    border-radius: 7px;
+    /* Between box and other elements    */
+    margin-bottom: 3px;
+}
+
+/*Top Bar*/ 
+.topbar button {
+    /* background: transparent; */
+    color: #3b4657;
+    border: none;
+    text-align: left;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.topbar button:hover {
+    background-color: white; 
+}
+
+.topbar button.active {
+    background-color: #252b38 ;
+    font-weight: bold; 
+    color: white; 
+}
+
+/* Form inputs */ 
+input, 
+select, 
+button {
+    padding: 8px; 
+    font-size: 14px; 
+}
+
+
+
+.heading h1, 
+.heading p {
+    margin: 0; 
+}
+
+/* add task bar */
+.add-task-bar {
+    background-color: white; 
+    padding: 15px 20px; 
+    border-radius: 10px; 
+    border: 1px solid #ddd; 
+    margin-bottom: 20px; 
+    margin-top: 15px;
+    max-width: 600px;
+    /* tasks up available space on the left and right, centering */ 
+    margin-left: auto; 
+    margin-right: auto; 
+}
+
+.add-task-heading {
+    /* header + switch on same row  */
+    display: flex; 
+    /* centers  */
+    align-items: center;
+    /* pushes header left and switch right */
+    justify-content: space-between;
+}
+
+/* Today's Tasks header*/
+.todayTaskHeader {
+    display: flex; 
+    align-items: center;
+    justify-content: space-between;
+    max-width: 600px;
+
+    margin-left: auto; 
+    margin-right: auto; 
+}
+
+
 /* Container holding all tasks */ 
 #taskList {
     display: flex; 
@@ -37,41 +123,7 @@ h1 {
     margin: 0; 
 }
 
-/* Form inputs */ 
-input, 
-select, 
-button {
-    padding: 8px; 
-    font-size: 14px; 
-}
-
-.heading {
-    background-color: #252b38; 
-    color: white; 
-    /*Between text and box*/ 
-    padding: 15px 30px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    border-radius: 7px;
-    /* Between box and other elements    */
-    margin-bottom: 3px;
-}
-
-.heading h1, 
-.heading p {
-    margin: 0; 
-}
-
-.add-task-bar {
-    background-color: white; 
-    padding: 10px; 
-    border-radius: 20px; 
-    border: 1px solid #ddd; 
-    margin-bottom: 20px; 
-    margin-top: 15px;
-}
-
+/* tasks section  */
 .task-card {
     display: flex; 
     align-items: center; 
@@ -90,12 +142,6 @@ button {
     accent-color: green;
 }
 
-#taskList {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; 
-}
-
 /* Buttons */
 button {
     cursor: pointer; 
@@ -105,28 +151,6 @@ button {
 .completed {
     text-decoration: line-through; 
     color: gray; 
-}
-
-/*Top Bar*/ 
-.topbar button {
-    /* background: transparent; */
-    color: #3b4657;
-    border: none;
-    text-align: left;
-    padding: 12px;
-    cursor: pointer;
-    border-radius: 6px;
-}
-
-
-.topbar button:hover {
-    background-color: white; 
-}
-
-.topbar button.active {
-    background-color: #252b38 ;
-    font-weight: bold; 
-    color: white; 
 }
 
 .main-content {

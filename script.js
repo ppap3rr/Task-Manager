@@ -28,6 +28,7 @@ Todo:
  - Make a formula to determine the priority + time due to determine color of the task 
  - BRIGHT RED when task is overdue 
  - checkmark / crossout for completion
+ - recurring
 */ 
 
 const taskNameInput = document.getElementById("taskInput");
@@ -36,6 +37,7 @@ const taskDate = document.getElementById("taskDate");
 const addButton = document.getElementById("addButton");
 const sortSelect = document.getElementById("sortTasks"); 
 const taskList = document.getElementById("taskList");
+const dailyTask = document.getElementById("dailyTask"); 
 
 // localStorage.removeItem("tasks"); 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []; 
@@ -56,7 +58,6 @@ setupTopButtons("upcomingButton", "upcoming");
 setupTopButtons("todayButton", "today");
 
 // Need functionality for the other buttons (Upcoming, daily, reminders, statistics)
-
 function updateActiveButton(selectedButton) {
     document.querySelectorAll(".topbar button").forEach(
         button => button.classList.remove("active")
@@ -143,8 +144,18 @@ function createTaskCard(task) {
     checkbox.type = "checkbox"; 
     checkbox.checked = task.completed; 
 
+    const removeButton = document.createElement("button");
+    removeButton.textContent = "Remove"; 
+    removeButton.addEventListener("click", () => {
+        removeTask(task.id); 
+        renderTasks(); 
+    })
+
     checkbox.addEventListener("change", () => {
         task.completed = checkbox.checked; 
+        // if (task.completed === true) {
+        //     removeTask(task.id); 
+        // }
         saveTasks(); 
         renderTasks(); 
     })
@@ -166,11 +177,17 @@ function createTaskCard(task) {
     completion.textContent = task.completed ? "Completed" : "Not Completed"; 
     
     card.appendChild(checkbox); 
+    card.appendChild(removeButton); 
     card.appendChild(title); 
     card.appendChild(dueDate); 
     card.appendChild(priority); 
     card.appendChild(completion); 
     return card;  
+}
+
+// completed tasks 
+function createFinishedTaskCard(task) {
+
 }
 
 
@@ -201,10 +218,9 @@ function completeTask(id) {
 }
 
 function saveTasks() {
+    // stores data in browser's local stoarge
     localStorage.setItem("tasks", JSON.stringify(tasks)); 
 }
-
-
 
 updateDate(); 
 

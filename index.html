@@ -24,21 +24,32 @@
             </nav>  
         </aside> 
         <div class = "add-task-bar">
-            <h2>Add a Task</h2> 
-            <input type="text" id="taskInput"
-            placeholder="Enter a task">
+            <div class = "add-task-heading"> 
+                <h2>Add a Task</h2> 
+                <!-- <div> 
+                    <label for = "dailyTask">Daily Task:</label>
+                    <label class = "switch"> 
+                        <input type = "checkbox" id = "dailyTask"> 
+                        <span class = "slider"></span>
+                    </label>
+                </div> -->
+            </div>
+            <input type="text" id="taskInput" placeholder="Enter a task">
             <input id = "taskDate" type = "date"> 
             <input id = "priorityTasks" type = "number" min = "1" max = "7"> 
             <button id="addButton">Add Task</button>
         </div>
-        
-        <h2>Today's Tasks:</h2> 
-        <label for = "sortTasks">Sort by:</label>
-        <select class = "heading-dropdown" id = "sortTasks"> 
-                <option value = "priority">Priority</option>   
-                <option value = "date">Due Date</option>
-                <option value = "alphabetical">Alphabetical</option>
-        </select> 
+        <div class = "todayTaskHeader">
+            <h2>All Tasks:</h2> 
+            <div> 
+                <label for = "sortTasks">Sort by:</label>
+                <select class = "heading-dropdown" id = "sortTasks"> 
+                        <option value = "priority">Priority</option>   
+                        <option value = "date">Due Date</option>
+                        <option value = "alphabetical">Alphabetical</option>
+                </select>
+            </div> 
+        </div>
         <div class = "tasks-sub-heading" id = "taskList"> 
             <script src="script.js"></script>
         </div>
