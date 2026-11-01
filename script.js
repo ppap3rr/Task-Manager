@@ -13,7 +13,8 @@ Task Display:
  - Different ways to sort the tasks / Due date, importance + due date, categorically
  - Category of tasks (can create categories as well)
  - Show overdue tasks
- - Separate calendar section depicting tasks on dates
+
+ Separate calendar section depicting tasks on dates
 Task completion history
 Search Tasks
 
@@ -26,13 +27,16 @@ Nice to have:
 Todo: 
  - Error checking for valid inputs
  - Make a formula to determine the priority + time due to determine color of the task 
- - BRIGHT RED when task is overdue 
  - checkmark / crossout for completion
  - recurring / daily tasks
- - NEED TO ADD TIME TO TASKS 
+ - NEED TO ADD TIME TO ALL TYPES OF TASKS
  - Depending on priority, add tasks to today's tasks
+ - NO TASKS TO SEE HERE! 
+ - add recurring tasks below daily tasks
 */ 
 
+const taskPage = document.getElementById("taskPage"); 
+const reminderPage = document.getElementById("reminderPage"); 
 const taskNameInput = document.getElementById("taskInput");
 const taskPriority = document.getElementById("priorityTasks"); 
 const taskDate = document.getElementById("taskDate"); 
@@ -42,10 +46,26 @@ const taskList = document.getElementById("taskList");
 const dailyTask = document.getElementById("dailyTask");
 const tasksHeader = document.getElementById("tasksHeader");  
 const dailyCheck = document.getElementById("dailyCheck");
+const addTaskHeader =document.getElementById("addTaskHeader"); 
+const notesList = document.getAnimations("notesList"); 
+
 
 // localStorage.removeItem("tasks"); 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []; 
 let currentView = "all"; 
+// let notes = [
+//     {
+//         id : crypto.randomUUID(), 
+//         title: "Linear Algebra Review", 
+//         content: "Review next chapter", 
+//         dataCreated :new Date(). toISOString() 
+//     }
+// ]
+
+// function saveNotes() {
+//     localStorage.setItem("notes", JSON.stringify(notes)); 
+// }
+
 dailyCheck.classList.add("hidden"); 
 
 updateActiveButton(document.getElementById("allTasksButton")); 
@@ -61,9 +81,40 @@ function setupTopButtons(buttonId, header, view) {
             // revealing the daily task check
             dailyCheck.classList.remove("hidden");  
             // TODO NEED TO REMOVE AND ADD OTHER FEATURES ALONGSIDE DAILY TASK
+            
+            // removing date 
+            taskDate.classList.add("hidden"); 
+            
+            // removing DUE DATE from SORT BY 
+            removeCategory("date");
+
+            addTaskHeader.textContent = "Add a Daily Task"; 
+            console.log(addTaskHeader.textContent); 
         } else {
             // any other button removes the daily task feature
             dailyCheck.classList.add("hidden"); 
+
+            // revealing date selector
+            taskDate.classList.remove("hidden"); 
+
+            // adding due date back into SORT BY if necessary 
+            addCategory("date"); 
+
+            addTaskHeader.textContent = "Add a Task"; 
+
+            // removing entire task interface on the reminder screen
+            if (buttonId === "reminderButton") {
+
+                console.log(taskPage); 
+                console.log(reminderPage); 
+                taskPage.classList.add("hidden"); 
+                reminderPage.classList.remove("hidden"); 
+            } else {
+                taskPage.classList.remove("hidden"); 
+                reminderPage.classList.add("hidden"); 
+                
+                renderTasks(); 
+            }
         }
         renderTasks(); 
     })
@@ -74,6 +125,7 @@ setupTopButtons("completedButton", "Completed Tasks", "completed");
 setupTopButtons("upcomingButton", "Upcoming Tasks", "upcoming");
 setupTopButtons("todayButton", "Today's Tasks", "today");
 setupTopButtons("dailyButton", "Daily Tasks", "daily");
+setupTopButtons("reminderButton", "Reminders", "reminder"); 
 
 // Need functionality for the other buttons (Upcoming, daily, reminders, statistics)
 function updateActiveButton(selectedButton) {
@@ -88,6 +140,9 @@ addButton.addEventListener("click", function() {
     const task = taskNameInput.value.trim();
     const priority = taskPriority.value; 
     const date = taskDate.value;
+    // UPDATE THIS FOR RECURRING TASKS 
+    const daily = (currentView === "daily") ? true : false; 
+    console.log(daily); 
     if (task === "") {
         return;
     }
@@ -96,14 +151,13 @@ addButton.addEventListener("click", function() {
 
     taskList.appendChild(li);
     taskNameInput.value = ""; 
-    addTask(task, parseInt(priority), date); 
+    addTask(task, parseInt(priority), date, daily); 
 });
 
+// need to exclude date sort on the daily page
 sortSelect.addEventListener("change", () => {
     renderTasks(); 
 });
-
-
 
 function updateDate() {
     const taskDate = document.getElementById("taskDate"); 
@@ -129,7 +183,7 @@ function renderTasks() {
     } else if (currentView === "completed") {
         visibleTasks = tasks.filter(task => task.completed); 
     } else if (currentView === "today") {
-        visibleTasks = tasks.filter(task => taskDate.value === task.dueDate); 
+        visibleTasks = tasks.filter(task => taskDate.value === task.dueDate || task.daily === true); 
     } else if (currentView === "upcoming") {
         visibleTasks = tasks.filter(task => task.dueDate > taskDate.value && !task.completed); 
     } else if (currentView === "daily") {
@@ -189,10 +243,7 @@ function createTaskCard(task) {
     if (task.completed) {
         title.classList.add("completed"); 
     }
-
-    const dueDate = document.createElement("p"); 
-    dueDate.textContent = `Due: ${task.dueDate}`; 
-
+    
     const priority = document.createElement("p"); 
     priority.textContent = `Priority: ${task.priority}`; 
 
@@ -202,14 +253,18 @@ function createTaskCard(task) {
     card.appendChild(checkbox); 
     card.appendChild(removeButton); 
     card.appendChild(title); 
-    card.appendChild(dueDate); 
+    if (currentView !== "daily") {
+        const dueDate = document.createElement("p"); 
+        dueDate.textContent = `Due: ${task.dueDate}`;
+        card.appendChild(dueDate);
+    } 
     card.appendChild(priority); 
     card.appendChild(completion); 
     // adds today tag for css styling
-    if (task.dueDate < today && !task.completed) {
+    if (task.dueDate < today && !task.completed && !task.daily) {
         card.classList.add("overdue");
     }
-
+    // card.style.justifyContent = "space-between"; 
     return card;  
 }
 
@@ -227,7 +282,7 @@ function addTask(title, priority, dueDate, daily, recurring) {
         priority: priority, 
         completed: false, 
         dueDate: dueDate, 
-        daily: false, 
+        daily: daily, 
         recurring: false 
     }; 
     tasks.push(task); 
@@ -252,28 +307,28 @@ function saveTasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks)); 
 }
 
+
+
+// ADDING / REMOVING categories from SORT BY
+function removeCategory(category) {
+    const option = sortSelect.querySelector(`option[value="${category}"]`)
+    if (option) {
+        console.log("found"); 
+        option.remove();
+    }
+}
+function addCategory(category) {
+    const existingOption = sortSelect.querySelector( `option[value="${category}"]`); 
+    if (existingOption) return; 
+
+    const option = document.createElement("option") ;
+    option.value = category; 
+    option.textContent = category; 
+    sortSelect.appendChild(option); 
+}
+
+
 updateDate(); 
-
 renderTasks(); 
-
-// function removeObjectStyleTasks() {
-//     // 1. Retrieve the tasks array from localStorage
-//     let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
-//     // 2. Filter: Keep a task ONLY if both priority and date are strings
-//     let cleanTasks = tasks.filter(task => {
-//         const isPriorityString = typeof task.priority === 'string';
-//         const isDateString = typeof task.date === 'string';
-
-//         // Keep the task only if both values are valid strings
-//         return isPriorityString && isDateString;
-//     });
-
-//     // 3. Save the repaired array back to localStorage
-//     localStorage.setItem("tasks", JSON.stringify(cleanTasks));
-
-//     // Print results to your console
-//     console.log(`Cleanup complete! Kept ${cleanTasks.length} valid tasks. Removed ${tasks.length - cleanTasks.length} broken object-style tasks.`);
-// }
 
 console.log(tasks); 

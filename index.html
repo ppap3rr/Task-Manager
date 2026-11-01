@@ -23,37 +23,88 @@
                 <button id = "statButton">Statistics</button>
             </nav>  
         </aside> 
-        <div class = "add-task-bar">
-            <div class = "add-task-heading"> 
-                <h2>Add a Task</h2> 
-                <div id = "dailyCheck" class = "task-card"> 
-                    <label for = "dailyTask">Daily Task:</label>
-                    <label class = "switch"> 
-                        <input type = "checkbox" id = "dailyTask"> 
-                        <span class = "slider"></span>
-                    </label>
+        <div id = "taskPage"> 
+            <div class = "add-task-bar">
+                <div class = "add-task-heading"> 
+                    <h2 id = "addTaskHeader">Add a Task</h2> 
+                    <div id = "dailyCheck" class = "task-card"> 
+                        <label for = "dailyTask">Daily Task:</label>
+                        <label class = "switch"> 
+                            <input type = "checkbox" id = "dailyTask"> 
+                            <span class = "slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <input type="text" id="taskInput" placeholder="Enter a task">
+                <input id = "taskDate" type = "date"> 
+                <label for = "priorityTasks">Priority:</label>
+                <input id = "priorityTasks" type = "number" min = "1" max = "7"> 
+                <button id="addButton">Add Task</button>
+            </div>
+            <div class = "todayTaskHeader">
+                <h2 id = "tasksHeader">All Tasks:</h2> 
+                <div> 
+                    <label for = "sortTasks">Sort by:</label>
+                    <select class = "heading-dropdown" id = "sortTasks"> 
+                            <option value = "priority">Priority</option>   
+                            <option value = "date">Due Date</option>
+                            <option value = "alphabetical">Alphabetical</option>
+                    </select>
+                </div> 
+            </div>
+            <ul id="taskList"></ul>
+        </div> 
+
+
+        <div id = "reminderPage" class = "hidden"> 
+            <div class = "notesHeader"> 
+                <div> 
+                    <h1>My Notes</h1>
+                    <p>Keep track of your thoughts and ideas</p>
+                </div>
+                <button id = "addNoteButton">Add Note</button>
+            </div>
+            <div class = "notesToolbar">
+                <intput type = "text" id = "noteSearch" placeholder = "Search your notes"></intput>
+            </div>
+            <div id = "notesList" class = "notesGrid"></div> 
+                <div class = "noteCard"> 
+                    <div class = "noteCardHeader"> 
+                        <h3>Linear Algebra Review</h3>
+                        <button class = "noteOptions">⋮</button>
+                    </div>
+                    <p>Reminder to do APOWEIFJAWPOEIFJAW</p>
+                    <div class = "noteCardFooter"> 
+                        <span>October 30, 2026</span>
+                    </div>      
+                </div>
+
+                <div class="note-card">
+                <div class="note-card-header">
+                    <h3>Project Ideas</h3>
+                    <button class="note-options">⋮</button>
+                </div>
+
+                <p>Potential features for the next version of my task manager...</p>
+
+                <div class="note-card-footer">
+                    <span>October 29, 2026</span>
                 </div>
             </div>
-            <input type="text" id="taskInput" placeholder="Enter a task">
-            <input id = "taskDate" type = "date"> 
-            <input id = "priorityTasks" type = "number" min = "1" max = "7"> 
-            <button id="addButton">Add Task</button>
+
+            <div class="note-card">
+                <div class="note-card-header">
+                    <h3>University Research</h3>
+                    <button class="note-options">⋮</button>
+                </div>
+
+                <p>Things to research before university applications.</p>
+
+                <div class="note-card-footer">
+                    <span>October 28, 2026</span>
+                </div>
+            </div>
         </div>
-        <div class = "todayTaskHeader">
-            <h2 id = "tasksHeader">All Tasks:</h2> 
-            <div> 
-                <label for = "sortTasks">Sort by:</label>
-                <select class = "heading-dropdown" id = "sortTasks"> 
-                        <option value = "priority">Priority</option>   
-                        <option value = "date">Due Date</option>
-                        <option value = "alphabetical">Alphabetical</option>
-                </select>
-            </div> 
-        </div>
-        <div class = "tasks-sub-heading" id = "taskList"> 
-            <script src="script.js"></script>
-        </div>
-        <ul id="taskList"></ul>
-    <div> 
+    </div> 
 </body>
 </html>
