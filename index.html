@@ -36,10 +36,19 @@
                     </div>
                 </div>
                 <input type="text" id="taskInput" placeholder="Enter a task">
-                <input id = "taskDate" type = "date"> 
+                <div id = "date-time"> 
+                    <label for = "taskDate">Date:</label>
+                    <input id = "taskDate" type = "date"> 
+                    <label for = "tasktime">Time:</label>
+                    <input type = "time" id = "taskTime">
+                </div>  
                 <label for = "priorityTasks">Priority:</label>
                 <input id = "priorityTasks" type = "number" min = "1" max = "7"> 
                 <button id="addButton">Add Task</button>
+                
+                <div class = "description-container"> 
+                    <textarea id = "taskDescription" placeholder = "Enter a description"></textarea>
+                </div>
             </div>
             <div class = "todayTaskHeader">
                 <h2 id = "tasksHeader">All Tasks:</h2> 
@@ -57,53 +66,65 @@
 
 
         <div id = "reminderPage" class = "hidden"> 
-            <div class = "notesHeader"> 
-                <div> 
-                    <h1>My Notes</h1>
-                    <p>Keep track of your thoughts and ideas</p>
-                </div>
-                <button id = "addNoteButton">Add Note</button>
-            </div>
-            <div class = "notesToolbar">
-                <intput type = "text" id = "noteSearch" placeholder = "Search your notes"></intput>
-            </div>
-            <div id = "notesList" class = "notesGrid"></div> 
-                <div class = "noteCard"> 
-                    <div class = "noteCardHeader"> 
-                        <h3>Linear Algebra Review</h3>
-                        <button class = "noteOptions">⋮</button>
-                    </div>
-                    <p>Reminder to do APOWEIFJAWPOEIFJAW</p>
-                    <div class = "noteCardFooter"> 
-                        <span>October 30, 2026</span>
-                    </div>      
-                </div>
+            <div class="notes-header">
+        <div>
+            <h1>My Notes</h1>
+            <p>Keep track of your thoughts and ideas.</p>
+        </div>
 
-                <div class="note-card">
-                <div class="note-card-header">
-                    <h3>Project Ideas</h3>
-                    <button class="note-options">⋮</button>
-                </div>
+        <button id="addNoteButton">+ New Note</button>
+    </div>
 
-                <p>Potential features for the next version of my task manager...</p>
+    <div class="notes-toolbar">
+        <input 
+            type="text" 
+            id="noteSearch" 
+            placeholder="Search your notes..."
+        >
+    </div>
 
-                <div class="note-card-footer">
-                    <span>October 29, 2026</span>
-                </div>
+    <div id="notesList" class="notes-grid">
+
+        <div class="note-card">
+            <div class="note-card-header">
+                <h3>Calculus Review</h3>
+                <button class="note-options">⋮</button>
             </div>
 
-            <div class="note-card">
-                <div class="note-card-header">
-                    <h3>University Research</h3>
-                    <button class="note-options">⋮</button>
-                </div>
+            <p>Remember to review integration by parts and substitution.</p>
 
-                <p>Things to research before university applications.</p>
-
-                <div class="note-card-footer">
-                    <span>October 28, 2026</span>
-                </div>
+            <div class="note-card-footer">
+                <span>October 30, 2026</span>
             </div>
+        </div>
+
+        <div class="note-card">
+            <div class="note-card-header">
+                <h3>Project Ideas</h3>
+                <button class="note-options">⋮</button>
+            </div>
+
+            <p>Potential features for the next version of my task manager...</p>
+
+            <div class="note-card-footer">
+                <span>October 29, 2026</span>
+            </div>
+        </div>
+
+        <div class="note-card">
+            <div class="note-card-header">
+                <h3>University Research</h3>
+                <button class="note-options">⋮</button>
+            </div>
+
+            <p>Things to research before university applications.</p>
+
+            <div class="note-card-footer">
+                <span>October 28, 2026</span>
+            </div>
+        </div>
+
+    </div>
         </div>
     </div> 
 </body>

@@ -71,9 +71,24 @@ button {
     margin-bottom: 20px; 
     margin-top: 15px;
     max-width: 600px;
+    display: flex; 
+    gap: 15px; 
+    flex-direction: column; 
     /* tasks up available space on the left and right, centering */ 
     margin-left: auto; 
     margin-right: auto; 
+}
+
+#taskDescription {
+    width: 100%;
+    min-height: 150px; 
+    padding: 12px; 
+    box-sizing: border-box; 
+    resize: vertical; 
+    font-family: inherit; 
+    font-size: 14px; 
+    border: 1px solid #ddd; 
+    border-radius: 8px;
 }
 
 .add-task-heading {
@@ -83,6 +98,11 @@ button {
     align-items: center;
     /* pushes header left and switch right */
     justify-content: space-between;
+    gap: 15px; 
+}
+
+.description-container {
+    width: 100%; 
 }
 
 /* Today's Tasks header*/
@@ -150,6 +170,13 @@ button {
 .task-card button[type = "remove"] {
     background-color: #cf2929;
     border: 1px solid #ff7777; 
+}
+
+.task-description {
+    color: #666; 
+    font-size: 14px; 
+    line-height: 1.5;
+    overflow-wrap: anywhere;
 }
 
 /* NOTE HEADER */

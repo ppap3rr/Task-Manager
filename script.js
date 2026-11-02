@@ -33,6 +33,10 @@ Todo:
  - Depending on priority, add tasks to today's tasks
  - NO TASKS TO SEE HERE! 
  - add recurring tasks below daily tasks
+
+TODAY: 
+ - Task description 
+ - Task editing 
 */ 
 
 const taskPage = document.getElementById("taskPage"); 
@@ -48,6 +52,8 @@ const tasksHeader = document.getElementById("tasksHeader");
 const dailyCheck = document.getElementById("dailyCheck");
 const addTaskHeader =document.getElementById("addTaskHeader"); 
 const notesList = document.getAnimations("notesList"); 
+const taskTime = document.getElementById("taskTime"); 
+const taskDescription = document.getElementById("taskDescription"); 
 
 
 // localStorage.removeItem("tasks"); 
@@ -100,21 +106,20 @@ function setupTopButtons(buttonId, header, view) {
             // adding due date back into SORT BY if necessary 
             addCategory("date"); 
 
-            addTaskHeader.textContent = "Add a Task"; 
+            addTaskHeader.textContent = "Add a Task";    
+        }
+        // removing entire task interface on the reminder screen
+        if (buttonId === "reminderButton") {
 
-            // removing entire task interface on the reminder screen
-            if (buttonId === "reminderButton") {
-
-                console.log(taskPage); 
-                console.log(reminderPage); 
-                taskPage.classList.add("hidden"); 
-                reminderPage.classList.remove("hidden"); 
-            } else {
-                taskPage.classList.remove("hidden"); 
-                reminderPage.classList.add("hidden"); 
-                
-                renderTasks(); 
-            }
+            console.log(taskPage); 
+            console.log(reminderPage); 
+            taskPage.classList.add("hidden"); 
+            reminderPage.classList.remove("hidden"); 
+        } else {
+            taskPage.classList.remove("hidden"); 
+            reminderPage.classList.add("hidden"); 
+            
+            renderTasks(); 
         }
         renderTasks(); 
     })
@@ -227,7 +232,6 @@ function createTaskCard(task) {
         removeTask(task.id); 
         renderTasks(); 
     })
-
     checkbox.addEventListener("change", () => {
         task.completed = checkbox.checked; 
         // if (task.completed === true) {
@@ -236,20 +240,21 @@ function createTaskCard(task) {
         saveTasks(); 
         renderTasks(); 
     })
-
     const title = document.createElement("h2"); 
     title.textContent = task.title; 
-
     if (task.completed) {
         title.classList.add("completed"); 
     }
-    
     const priority = document.createElement("p"); 
     priority.textContent = `Priority: ${task.priority}`; 
-
     const completion = document.createElement("p"); 
     completion.textContent = task.completed ? "Completed" : "Not Completed"; 
-    
+    const description = document.createElement("p"); 
+    description.textContent = task.description; 
+    description.classList.add("task-description"); 
+    const time = document.createElement("p"); 
+    time.textContent = task.time ? `Time: ${task.time}` : "No time set"; 
+
     card.appendChild(checkbox); 
     card.appendChild(removeButton); 
     card.appendChild(title); 
@@ -258,8 +263,13 @@ function createTaskCard(task) {
         dueDate.textContent = `Due: ${task.dueDate}`;
         card.appendChild(dueDate);
     } 
+    card.appendChild(time); 
+    card.appendChild(description); 
     card.appendChild(priority); 
     card.appendChild(completion); 
+    
+    
+
     // adds today tag for css styling
     if (task.dueDate < today && !task.completed && !task.daily) {
         card.classList.add("overdue");
@@ -283,7 +293,9 @@ function addTask(title, priority, dueDate, daily, recurring) {
         completed: false, 
         dueDate: dueDate, 
         daily: daily, 
-        recurring: false 
+        recurring: false, 
+        description: taskDescription.value, 
+        time: taskTime.value // can't put a comma here
     }; 
     tasks.push(task); 
     saveTasks(); 
@@ -327,6 +339,12 @@ function addCategory(category) {
     sortSelect.appendChild(option); 
 }
 
+
+// Notes 
+
+function renderNotes() {
+
+}
 
 updateDate(); 
 renderTasks(); 
