@@ -33,7 +33,7 @@ Todo:
  - Depending on priority, add tasks to today's tasks
  - NO TASKS TO SEE HERE! 
  - add recurring tasks below daily tasks
-
+ - show a popup saying a task has been completed / removed / 
 TODAY: 
  - Task description 
  - Task editing 
@@ -215,6 +215,12 @@ function renderTasks() {
     })
 }
 
+function updateTask(task, property, value) {
+    task[property] = value; 
+    localStorage.setItem("tasks", JSON.stringify(tasks)); 
+    renderTasks(); 
+}
+
 function createTaskCard(task) {
     // today's date formatted for comparison
     const today = new Date().toISOString().split("T")[0];
@@ -245,29 +251,46 @@ function createTaskCard(task) {
     if (task.completed) {
         title.classList.add("completed"); 
     }
-    const priority = document.createElement("p"); 
-    priority.textContent = `Priority: ${task.priority}`; 
-    const completion = document.createElement("p"); 
-    completion.textContent = task.completed ? "Completed" : "Not Completed"; 
-    const description = document.createElement("p"); 
-    description.textContent = task.description; 
-    description.classList.add("task-description"); 
-    const time = document.createElement("p"); 
-    time.textContent = task.time ? `Time: ${task.time}` : "No time set"; 
+    const priority = document.createElement("input");
+    priority.type = "number";  
+    priority.value = `${task.priority}`; 
+    priority.addEventListener("change", function() {
+        // need to convert priority text content to a number
+        updateTask(task, "priority", Number(priority.value)); 
+    })
+    let time = document.createElement("p"); 
+    time.textContent = "No time set"; 
+    if (task.time) {    
+        console.log("task time exists"); 
+        time = document.createElement("input"); 
+        time.type = "time"; 
+        time.value  = task.time;
+        time.addEventListener("change", function() {
+            updateTask(task, "time", time.value); 
+        })
+    }
 
     card.appendChild(checkbox); 
-    card.appendChild(removeButton); 
+    card.appendChild(removeButton);
     card.appendChild(title); 
-    if (currentView !== "daily") {
-        const dueDate = document.createElement("p"); 
-        dueDate.textContent = `Due: ${task.dueDate}`;
-        card.appendChild(dueDate);
+    if (currentView !== "daily" && task.daily !== true) {
+        const dueDate = document.createElement("input"); 
+        dueDate.type = "date"; 
+        dueDate.value = `${task.dueDate}`; 
+        dueDate.addEventListener("change", function() {
+            updateTask(task, "dueDate", dueDate.value); 
+        })
+        card.appendChild(dueDate); // change
     } 
-    card.appendChild(time); 
-    card.appendChild(description); 
-    card.appendChild(priority); 
-    card.appendChild(completion); 
+    card.appendChild(time); // change
     
+    card.appendChild(priority); // change
+
+    /*NEED TO ADD DESCRIPTION TO TASK CARD--NEXT ROW!*/ 
+    // const description = document.createElement("p"); 
+    // description.textContent = task.description; 
+    // description.classList.add("task-description"); 
+    // card.appendChild(description); 
     
 
     // adds today tag for css styling
