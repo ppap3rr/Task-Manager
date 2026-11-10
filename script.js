@@ -1,11 +1,6 @@
 /*
 Task creation (everyday tasks), 
- - Remove Tasks,
- - Complete Tasks 
- - Edit Tasks
- - Due dates + times 
- - Task notes 
- - Rate it on a scale of importance 
+ - Task description 
  - Daily tasks (recurring) (ex. read for 30 minutes, 1 hour of LeetCode)
 
 Task Display: 
@@ -14,9 +9,12 @@ Task Display:
  - Category of tasks (can create categories as well)
  - Show overdue tasks
 
- Separate calendar section depicting tasks on dates
+ - 2 ways to sort the "boxes"
+    1: Categories
+    2: Upcoming, Today, recently completed, daily
+
+Separate calendar section depicting tasks on dates
 Task completion history
-Search Tasks
 
 Nice to have: 
  - Productivity dashboard with statistics
@@ -34,9 +32,8 @@ Todo:
  - NO TASKS TO SEE HERE! 
  - add recurring tasks below daily tasks
  - show a popup saying a task has been completed / removed / 
-TODAY: 
- - Task description 
- - Task editing 
+ - remove today, upcoming, and daily tabs and combine them into "all tasks"
+ - completed daily tasks need to be reset the next day 
 */ 
 
 const taskPage = document.getElementById("taskPage"); 
@@ -47,14 +44,14 @@ const taskDate = document.getElementById("taskDate");
 const addButton = document.getElementById("addButton");
 const sortSelect = document.getElementById("sortTasks"); 
 const taskList = document.getElementById("taskList");
-const dailyTask = document.getElementById("dailyTask");
+const recurringTask = document.getElementById("recurringTask");
 const tasksHeader = document.getElementById("tasksHeader");  
-const dailyCheck = document.getElementById("dailyCheck");
+const recurringCheck= document.getElementById("recurringCheck");
 const addTaskHeader =document.getElementById("addTaskHeader"); 
 const notesList = document.getAnimations("notesList"); 
 const taskTime = document.getElementById("taskTime"); 
 const taskDescription = document.getElementById("taskDescription"); 
-
+const addTaskBar = document.getElementById("addTaskBar"); 
 
 // localStorage.removeItem("tasks"); 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []; 
@@ -72,7 +69,7 @@ let currentView = "all";
 //     localStorage.setItem("notes", JSON.stringify(notes)); 
 // }
 
-dailyCheck.classList.add("hidden"); 
+recurringCheck.classList.add("hidden"); 
 
 updateActiveButton(document.getElementById("allTasksButton")); 
 
@@ -85,20 +82,21 @@ function setupTopButtons(buttonId, header, view) {
         updateActiveButton(document.getElementById(buttonId)); 
         if (buttonId === "dailyButton") {
             // revealing the daily task check
-            dailyCheck.classList.remove("hidden");  
+            recurringCheck.classList.remove("hidden");  
             // TODO NEED TO REMOVE AND ADD OTHER FEATURES ALONGSIDE DAILY TASK
             
             // removing date 
             taskDate.classList.add("hidden"); 
-            
+            const dateLabel = addTaskBar.querySelector(`label[for=${"taskDate"}]`).remove(); 
+
             // removing DUE DATE from SORT BY 
             removeCategory("date");
-
+            
             addTaskHeader.textContent = "Add a Daily Task"; 
             console.log(addTaskHeader.textContent); 
         } else {
             // any other button removes the daily task feature
-            dailyCheck.classList.add("hidden"); 
+            recurringCheck.classList.add("hidden"); 
 
             // revealing date selector
             taskDate.classList.remove("hidden"); 
@@ -110,7 +108,6 @@ function setupTopButtons(buttonId, header, view) {
         }
         // removing entire task interface on the reminder screen
         if (buttonId === "reminderButton") {
-
             console.log(taskPage); 
             console.log(reminderPage); 
             taskPage.classList.add("hidden"); 
@@ -118,8 +115,14 @@ function setupTopButtons(buttonId, header, view) {
         } else {
             taskPage.classList.remove("hidden"); 
             reminderPage.classList.add("hidden"); 
-            
             renderTasks(); 
+            // removing the add task bar on the completed tab
+            if (buttonId === "completedButton") {
+                addTaskBar.classList.add("hidden"); 
+                console.log("hello?"); 
+            } else {
+                addTaskBar.classList.remove("hidden"); 
+            }
         }
         renderTasks(); 
     })
@@ -156,6 +159,10 @@ addButton.addEventListener("click", function() {
 
     taskList.appendChild(li);
     taskNameInput.value = ""; 
+    taskPriority.value = 0; 
+    taskTime.value = ""; 
+    updateDate();
+    showNotification("Task created successfully!"); 
     addTask(task, parseInt(priority), date, daily); 
 });
 
@@ -232,19 +239,18 @@ function createTaskCard(task) {
     checkbox.checked = task.completed; 
 
     const removeButton = document.createElement("button");
-    removeButton.textContent = "Remove"; 
+    removeButton.textContent = "X"; 
     removeButton.type = "remove"; 
     removeButton.addEventListener("click", () => {
         removeTask(task.id); 
         renderTasks(); 
+        showNotification("Task removed!"); 
     })
     checkbox.addEventListener("change", () => {
         task.completed = checkbox.checked; 
-        // if (task.completed === true) {
-        //     removeTask(task.id); 
-        // }
         saveTasks(); 
         renderTasks(); 
+        showNotification("Task completed!"); 
     })
     const title = document.createElement("h2"); 
     title.textContent = task.title; 
@@ -301,11 +307,6 @@ function createTaskCard(task) {
     return card;  
 }
 
-// completed tasks 
-function createFinishedTaskCard(task) {
-
-}
-
 
 // TASK INTERACTIONS
 function addTask(title, priority, dueDate, daily, recurring) {
@@ -329,29 +330,21 @@ function removeTask(id) {
     tasks = tasks.filter(task => task.id != id); 
 }
 
-function completeTask(id) {
-    const task = tasks.find(task => task.id === id); 
-    
-    if (task) {
-        task.completed = true; 
-    }
-}
-
 function saveTasks() {
     // stores data in browser's local stoarge
     localStorage.setItem("tasks", JSON.stringify(tasks)); 
 }
 
-
-
-// ADDING / REMOVING categories from SORT BY
+// ADDING / REMOVING categories from SORT BY and date label
 function removeCategory(category) {
+    // searches the first HTML element matching a CSS selector inside another element
     const option = sortSelect.querySelector(`option[value="${category}"]`)
     if (option) {
         console.log("found"); 
         option.remove();
     }
 }
+
 function addCategory(category) {
     const existingOption = sortSelect.querySelector( `option[value="${category}"]`); 
     if (existingOption) return; 
@@ -361,12 +354,21 @@ function addCategory(category) {
     option.textContent = category; 
     sortSelect.appendChild(option); 
 }
-
-
 // Notes 
 
 function renderNotes() {
 
+}
+
+// Notifications
+function showNotification(message) {
+    const notification = document.createElement("div"); 
+    notification.classList.add("notification"); 
+    notification.textContent = message; 
+    document.body.appendChild(notification); 
+    setTimeout(() => {
+        notification.remove(); 
+    }, 3000); 
 }
 
 updateDate(); 
