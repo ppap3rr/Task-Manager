@@ -25,15 +25,15 @@ Nice to have:
 Todo: 
  - Error checking for valid inputs
  - Make a formula to determine the priority + time due to determine color of the task 
- - checkmark / crossout for completion
  - recurring / daily tasks
- - NEED TO ADD TIME TO ALL TYPES OF TASKS
  - Depending on priority, add tasks to today's tasks
  - NO TASKS TO SEE HERE! 
  - add recurring tasks below daily tasks
- - show a popup saying a task has been completed / removed / 
  - remove today, upcoming, and daily tabs and combine them into "all tasks"
  - completed daily tasks need to be reset the next day 
+ - serach
+
+
 */ 
 
 const taskPage = document.getElementById("taskPage"); 
@@ -80,15 +80,14 @@ function setupTopButtons(buttonId, header, view) {
         currentView = view; 
         tasksHeader.textContent = header; 
         updateActiveButton(document.getElementById(buttonId)); 
+        console.log(buttonId); 
         if (buttonId === "dailyButton") {
-            // revealing the daily task check
-            recurringCheck.classList.remove("hidden");  
-            // TODO NEED TO REMOVE AND ADD OTHER FEATURES ALONGSIDE DAILY TASK
-            
             // removing date 
             taskDate.classList.add("hidden"); 
-            const dateLabel = addTaskBar.querySelector(`label[for=${"taskDate"}]`).remove(); 
-
+            // revealing the daily task check
+            recurringCheck.classList.remove("hidden");  
+            // TODO NEED TO REMOVE AND ADD OTHER FEATURES ALONGSIDE DAILY TASK            
+            // const dateLabel = addTaskBar.querySelector(`label[for=${"taskDate"}]`).remove(); 
             // removing DUE DATE from SORT BY 
             removeCategory("date");
             
@@ -97,13 +96,10 @@ function setupTopButtons(buttonId, header, view) {
         } else {
             // any other button removes the daily task feature
             recurringCheck.classList.add("hidden"); 
-
             // revealing date selector
             taskDate.classList.remove("hidden"); 
-
             // adding due date back into SORT BY if necessary 
             addCategory("date"); 
-
             addTaskHeader.textContent = "Add a Task";    
         }
         // removing entire task interface on the reminder screen
@@ -116,13 +112,12 @@ function setupTopButtons(buttonId, header, view) {
             taskPage.classList.remove("hidden"); 
             reminderPage.classList.add("hidden"); 
             renderTasks(); 
-            // removing the add task bar on the completed tab
-            if (buttonId === "completedButton") {
-                addTaskBar.classList.add("hidden"); 
-                console.log("hello?"); 
-            } else {
-                addTaskBar.classList.remove("hidden"); 
-            }
+        }
+        // removing the add task bar 
+        if (buttonId === "completedButton" || buttonId === "todayButton" || buttonId === "upcomingButton") {
+            addTaskBar.classList.add("hidden"); 
+        } else {
+            addTaskBar.classList.remove("hidden"); 
         }
         renderTasks(); 
     })
@@ -137,7 +132,7 @@ setupTopButtons("reminderButton", "Reminders", "reminder");
 
 // Need functionality for the other buttons (Upcoming, daily, reminders, statistics)
 function updateActiveButton(selectedButton) {
-    document.querySelectorAll(".topbar button").forEach(
+    document.querySelectorAll(".sidebar button").forEach(
         button => button.classList.remove("active")
     ); 
     console.log(selectedButton); 
@@ -166,6 +161,16 @@ addButton.addEventListener("click", function() {
     addTask(task, parseInt(priority), date, daily); 
 });
 
+taskPriority.addEventListener("input", () => {
+    if (taskPriority.value > 10) {
+        taskPriority.value = 10; 
+    }
+    if (taskPriority.value < 1 && taskPriority.value !== "") {
+        taskPriority.value = 1; 
+    }
+
+})
+
 // need to exclude date sort on the daily page
 sortSelect.addEventListener("change", () => {
     renderTasks(); 
@@ -177,7 +182,12 @@ function updateDate() {
     const yyyy= today.getFullYear(); 
     const mm = String(today.getMonth() + 1).padStart(2, '0'); // 0 is january 
     const dd = String(today.getDate()).padStart(2, '0'); 
+    if (taskDate.value != `${yyyy}-${mm}-${dd}`) {
+        taskDate.value = `${yyyy}-${mm}-${dd}`; 
+        return true; 
+    }
     taskDate.value = `${yyyy}-${mm}-${dd}`; 
+    return false; 
 }
 
 /* 
@@ -246,6 +256,10 @@ function createTaskCard(task) {
         renderTasks(); 
         showNotification("Task removed!"); 
     })
+    if (updateDate() === false && task.daily === true) {
+        checkbox.checked = false; 
+        task.completed = checkbox.checked; 
+    }
     checkbox.addEventListener("change", () => {
         task.completed = checkbox.checked; 
         saveTasks(); 
@@ -359,7 +373,6 @@ function addCategory(category) {
 function renderNotes() {
 
 }
-
 // Notifications
 function showNotification(message) {
     const notification = document.createElement("div"); 

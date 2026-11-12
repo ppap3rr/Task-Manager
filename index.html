@@ -8,19 +8,17 @@
 </head>
 
 <body>
-    <div> 
-        <aside class = "topbar"> 
-            <header class="heading">
-                <h1>My Task Manager</h1>
-            </header>
-            <nav> 
-                <button id = "allTasksButton">All Tasks</button>
-                <button id = "todayButton">Today</button>
+    <div class = "app-container"> 
+        <aside class = "sidebar"> 
+            <h2 class = "logo">✓ Task Manager</h2>
+            <nav class = "sidebar-nav"> 
+                <button class = "nav-button" id = "allTasksButton">Tasks</button>
+                <!-- <button id = "todayButton">Today</button>
                 <button id = "upcomingButton">Upcoming</button>
                 <button id = "completedButton">Completed</button>  
-                <button id = "dailyButton">Daily</button>
-                <button id = "reminderButton">Reminders</button> 
-                <button id = "statButton">Statistics</button>
+                <button id = "dailyButton">Daily</button> -->
+                <button class = "nav-button" id = "reminderButton">Reminders</button> 
+                <button class = "nav-button" id = "statButton">Statistics</button>
             </nav>  
         </aside> 
         <div id = "taskPage"> 
@@ -41,9 +39,9 @@
                     <input id = "taskDate" type = "date"> 
                     <label for = "tasktime">Time:</label>
                     <input type = "time" id = "taskTime">
-                </div>  
-                <label for = "priorityTasks">Priority:</label>
-                <input id = "priorityTasks" type = "number" min = "1" max = "7"> 
+                </div>                  
+                <label for = "priorityTasks">Priority: 1(League), 5(Worksheet), 10(IA/Internationals)</label>
+                <input id = "priorityTasks" type = "number"  min = "1" max = "10" step = "1"> 
                 <button id="addButton">Add Task</button>
                 
                 <div class = "description-container"> 
