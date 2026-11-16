@@ -34,7 +34,7 @@ h1 {
 
 /*Side Bar*/
 .sidebar {
-    background-color: #f5f3f3be; 
+    background-color: #f5f3f3b4; 
 } 
 .sidebar button {
     width: 260px;
@@ -119,6 +119,14 @@ button {
     margin: 0; 
 }
 
+/* Buttons */ 
+.buttons button{
+    border-radius: 10px; 
+    gap: 30px; 
+    background-color: #ccc4c4;
+    margin-top: 10px;
+}
+
 /* add task bar */
 .add-task-bar {
     background-color: white; 
@@ -174,26 +182,30 @@ button {
 }
 
 
+/* Column headings */
+.task-list-header {
+    display: grid; 
+    grid-template-columns: 1fr 2fr 1.5fr 1fr 1.5fr 1fr; 
+    padding: 15px 20px; 
+    border-bottom: 1px solid#e5e5e5; 
+
+    font-weight: bold; 
+    color: #777; 
+    font-size: 14px; 
+}
+
+
 /* Container holding all tasks */ 
 #taskList {
     display: flex; 
     flex-direction: column ;
-    gap: 15px; 
+    /* gap: 15px;  */
     max-width: 800px; 
-    margin: 20px auto; 
+    /* margin: 20px auto;  */
 }
 
-/* Individual task cards */ 
-.task-card {
-    display: flex; 
-    align-items: center; 
-    gap: 20px; 
-    background-color: white; 
-    border: 1px solid #ddd; 
-    border-radius: 8px; 
-    padding: 15px; 
-}
 
+/* Individual task cards  */
 .task-card.overdue {
     background-color: #ffe0e0;
     border: 1px solid #ff7777; 
@@ -205,16 +217,21 @@ button {
     margin: 0; 
 }
 
-/* tasks section  */
 .task-card {
-    display: flex; 
+    display: grid; 
+    grid-template-columns: 1fr 2fr 1.5fr 1fr 1.5fr 1fr; 
     align-items: center; 
     gap: 20px; 
 
     background-color: white; 
-    padding: 15px 20px;
-    border-radius: 10px;
-    border: 1px solid #ddd; 
+    padding: 18px 20px;
+    border-bottom: 1px solid #eeeeee;
+    /* border-radius: 10px; */
+    /* border: 1px solid #ddd;  */
+}
+
+.task-card:hover {
+    background-color: #f8f8fa; 
 }
 
 .task-card input[type = "checkbox"] {
@@ -381,12 +398,13 @@ button {
     }
 }
 
-.main-content {
+.app-container {
     flex: 1; 
     min-width: 0;
-    padding: 30px;
+    padding: 30px 50px;
     background-color: #f5f5f5;
 }
+
 
 .hidden {
     display: none; 

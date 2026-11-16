@@ -81,44 +81,45 @@ function setupTopButtons(buttonId, header, view) {
         tasksHeader.textContent = header; 
         updateActiveButton(document.getElementById(buttonId)); 
         console.log(buttonId); 
-        if (buttonId === "dailyButton") {
-            // removing date 
-            taskDate.classList.add("hidden"); 
-            // revealing the daily task check
-            recurringCheck.classList.remove("hidden");  
-            // TODO NEED TO REMOVE AND ADD OTHER FEATURES ALONGSIDE DAILY TASK            
-            // const dateLabel = addTaskBar.querySelector(`label[for=${"taskDate"}]`).remove(); 
-            // removing DUE DATE from SORT BY 
-            removeCategory("date");
+        
+        // if (buttonId === "dailyButton") {
+        //     // removing date 
+        //     taskDate.classList.add("hidden"); 
+        //     // revealing the daily task check
+        //     recurringCheck.classList.remove("hidden");  
+        //     // TODO NEED TO REMOVE AND ADD OTHER FEATURES ALONGSIDE DAILY TASK            
+        //     // const dateLabel = addTaskBar.querySelector(`label[for=${"taskDate"}]`).remove(); 
+        //     // removing DUE DATE from SORT BY 
+        //     removeCategory("date");
             
-            addTaskHeader.textContent = "Add a Daily Task"; 
-            console.log(addTaskHeader.textContent); 
-        } else {
-            // any other button removes the daily task feature
-            recurringCheck.classList.add("hidden"); 
-            // revealing date selector
-            taskDate.classList.remove("hidden"); 
-            // adding due date back into SORT BY if necessary 
-            addCategory("date"); 
-            addTaskHeader.textContent = "Add a Task";    
-        }
-        // removing entire task interface on the reminder screen
-        if (buttonId === "reminderButton") {
-            console.log(taskPage); 
-            console.log(reminderPage); 
-            taskPage.classList.add("hidden"); 
-            reminderPage.classList.remove("hidden"); 
-        } else {
-            taskPage.classList.remove("hidden"); 
-            reminderPage.classList.add("hidden"); 
-            renderTasks(); 
-        }
-        // removing the add task bar 
-        if (buttonId === "completedButton" || buttonId === "todayButton" || buttonId === "upcomingButton") {
-            addTaskBar.classList.add("hidden"); 
-        } else {
-            addTaskBar.classList.remove("hidden"); 
-        }
+        //     addTaskHeader.textContent = "Add a Daily Task"; 
+        //     console.log(addTaskHeader.textContent); 
+        // } else {
+        //     // any other button removes the daily task feature
+        //     recurringCheck.classList.add("hidden"); 
+        //     // revealing date selector
+        //     taskDate.classList.remove("hidden"); 
+        //     // adding due date back into SORT BY if necessary 
+        //     addCategory("date"); 
+        //     addTaskHeader.textContent = "Add a Task";    
+        // }
+        // // removing entire task interface on the reminder screen
+        // if (buttonId === "reminderButton") {
+        //     console.log(taskPage); 
+        //     console.log(reminderPage); 
+        //     taskPage.classList.add("hidden"); 
+        //     reminderPage.classList.remove("hidden"); 
+        // } else {
+        //     taskPage.classList.remove("hidden"); 
+        //     reminderPage.classList.add("hidden"); 
+        //     renderTasks(); 
+        // }
+        // // removing the add task bar 
+        // if (buttonId === "completedButton" || buttonId === "todayButton" || buttonId === "upcomingButton") {
+        //     addTaskBar.classList.add("hidden"); 
+        // } else {
+        //     addTaskBar.classList.remove("hidden"); 
+        // }
         renderTasks(); 
     })
 }
@@ -291,8 +292,9 @@ function createTaskCard(task) {
     }
 
     card.appendChild(checkbox); 
-    card.appendChild(removeButton);
+    // card.appendChild(removeButton);
     card.appendChild(title); 
+    card.appendChild(priority); // change
     if (currentView !== "daily" && task.daily !== true) {
         const dueDate = document.createElement("input"); 
         dueDate.type = "date"; 
@@ -304,19 +306,19 @@ function createTaskCard(task) {
     } 
     card.appendChild(time); // change
     
-    card.appendChild(priority); // change
+    
 
     /*NEED TO ADD DESCRIPTION TO TASK CARD--NEXT ROW!*/ 
     // const description = document.createElement("p"); 
     // description.textContent = task.description; 
     // description.classList.add("task-description"); 
     // card.appendChild(description); 
-    
 
     // adds today tag for css styling
     if (task.dueDate < today && !task.completed && !task.daily) {
         card.classList.add("overdue");
     }
+
     // card.style.justifyContent = "space-between"; 
     return card;  
 }

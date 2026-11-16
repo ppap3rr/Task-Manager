@@ -21,7 +21,30 @@
                 <button class = "nav-button" id = "statButton">Statistics</button>
             </nav>  
         </aside> 
-        <div id = "taskPage"> 
+        <div class = "task-page" id = "taskPage"> 
+            <h1>My Tasks</h1>
+            <h3>Stay organized, get things done.</h3>
+            <!-- settings + sorting -->
+            <div> 
+                <input id = "search" type = "text" placeholder="Search Tasks..."> 
+                <!-- <label for = "sortTasks">Sort by:</label> -->
+                <select id = "category"> 
+                    <!-- INSERT CDATEGORIES -->
+                </select>
+                <select class = "heading-dropdown" id = "sortTasks"> 
+                        <option value = "priority">Sort: Priority</option>   
+                        <option value = "date">Sort: Due Date</option>
+                        <option value = "alphabetical">Sort: Alphabetical</option>
+                </select>
+            </div>
+            <div class = "buttons"> 
+                <button id = "allButton">All</button>
+                <button id = "todayButton">Today</button>
+                <button id = "upcomingButton">Upcoming</button> <!--Need to dynamically add number here-->
+                <button id = "completedButton">Completed</button>
+                <button id = "dailyButton">Daily</button>
+            </div>
+            <br> 
             <div class = "add-task-bar" id = "addTaskBar">
                 <div class = "add-task-heading"> 
                     <h2 id = "addTaskHeader">Add a Task</h2> 
@@ -48,17 +71,18 @@
                     <textarea id = "taskDescription" placeholder = "Enter a description"></textarea>
                 </div>
             </div>
-            <div class = "todayTaskHeader">
-                <h2 id = "tasksHeader">All Tasks:</h2> 
-                <div> 
-                    <label for = "sortTasks">Sort by:</label>
-                    <select class = "heading-dropdown" id = "sortTasks"> 
-                            <option value = "priority">Priority</option>   
-                            <option value = "date">Due Date</option>
-                            <option value = "alphabetical">Alphabetical</option>
-                    </select>
-                </div> 
-            </div>
+            <div class = "task-list">
+                <div class="task-list-header"> 
+                    <input type = "checkbox"></input> 
+                    <span>Task</span>
+                    <span>Category</span>
+                    <span>Priority</span>
+                    <span>Due Date</span>
+                    <span>Status</span>
+                </div>
+                <div id = "tasksContainer"> 
+                
+                </div>
             <ul id="taskList"></ul>
         </div> 
 
