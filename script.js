@@ -32,8 +32,10 @@ Todo:
  - remove today, upcoming, and daily tabs and combine them into "all tasks"
  - completed daily tasks need to be reset the next day 
  - serach
-
-
+ - CHANGE ADD TASK SO THE PRIORITY IS DOTS RATHER THAN A NUMBER
+ - make schedule for tomorrow 
+ - settings tab 
+ - add icons
 */ 
 
 const taskPage = document.getElementById("taskPage"); 
@@ -249,14 +251,7 @@ function createTaskCard(task) {
     checkbox.type = "checkbox"; 
     checkbox.checked = task.completed; 
 
-    const removeButton = document.createElement("button");
-    removeButton.textContent = "X"; 
-    removeButton.type = "remove"; 
-    removeButton.addEventListener("click", () => {
-        removeTask(task.id); 
-        renderTasks(); 
-        showNotification("Task removed!"); 
-    })
+    // CHECKBOX
     if (updateDate() === false && task.daily === true) {
         checkbox.checked = false; 
         task.completed = checkbox.checked; 
@@ -267,18 +262,33 @@ function createTaskCard(task) {
         renderTasks(); 
         showNotification("Task completed!"); 
     })
+
+    // TASK NAME 
     const title = document.createElement("h2"); 
     title.textContent = task.title; 
     if (task.completed) {
         title.classList.add("completed"); 
     }
-    const priority = document.createElement("input");
-    priority.type = "number";  
-    priority.value = `${task.priority}`; 
-    priority.addEventListener("change", function() {
-        // need to convert priority text content to a number
-        updateTask(task, "priority", Number(priority.value)); 
-    })
+
+    // PRIORITY
+    let colour; 
+    const priorityContainer = document.createElement("div");
+    priorityContainer.classList.add("priority-dots"); 
+    for (let i = 0; i < task.priority; i++) {
+        const dot = document.createElement("span"); 
+        dot.classList.add("priority-dot"); 
+        if (task.priority <= 2) {
+            colour = "green"; 
+        } else if (task.priority <= 4) {
+            colour = "orange"; 
+        } else {
+            colour = "red"; 
+        }
+        dot.style.backgroundColor = colour;
+        priorityContainer.appendChild(dot); 
+    }
+
+    // TIME (MAY NEED TO REMOVE)
     let time = document.createElement("p"); 
     time.textContent = "No time set"; 
     if (task.time) {    
@@ -291,22 +301,70 @@ function createTaskCard(task) {
         })
     }
 
+    // MENU BUTTON
+    const menuButton = document.createElement("button"); 
+    menuButton.textContent = "⋮";
+    menuButton.classList.add("task-menu-button");
+    menuButton.addEventListener("click", () => {
+        menu.classList.toggle("show"); 
+    })
+
+    // MENU CONTAINER
+    const menu = document.createElement("div");
+    menu.classList.add("task-menu");
+
+    // EDIT MENU
+    const editButton = document.createElement("button"); 
+    editButton.textContent = "Edit"; 
+
+    const deleteButton = document.createElement("button"); 
+    deleteButton.textContent = "Delete"; 
+    deleteButton.addEventListener("click", () => {
+        removeTask(task.id); 
+        renderTasks(); 
+        showNotification("Task removed!"); 
+    })
+
+
+    menu.append(editButton, deleteButton); 
+
+    const menuWrapper = document.createElement("div"); 
+    menuWrapper.classList.add("task-menu-wrapper"); 
+    document.addEventListener("click", (event) => {
+        if (!menuWrapper.contains(event.target)) {
+            menu.classList.remove("show");
+        }
+    });
+    menuWrapper.append(menuButton, menu); 
+
     card.appendChild(checkbox); 
-    // card.appendChild(removeButton);
     card.appendChild(title); 
-    card.appendChild(priority); // change
+    card.appendChild(priorityContainer); 
+    const category = document.createElement("label"); 
+    if ("category" in task === false || task.category === "") {        
+        category.textContent = "No Category"; 
+    } else {
+        category.textContent = task.category; 
+    }
+    card.appendChild(category); 
     if (currentView !== "daily" && task.daily !== true) {
-        const dueDate = document.createElement("input"); 
-        dueDate.type = "date"; 
-        dueDate.value = `${task.dueDate}`; 
-        dueDate.addEventListener("change", function() {
-            updateTask(task, "dueDate", dueDate.value); 
+        const dueDate = document.createElement("label"); 
+        const date = new Date(task.dueDate + "T00:00:00"); 
+        const formattedDate = date.toLocaleDateString("en-CA", {
+            year: "numeric", 
+            month: "short", 
+            day: "numeric"
         })
+        dueDate.textContent = formattedDate; 
         card.appendChild(dueDate); // change
-    } 
+    } else {
+        const noDate = document.createElement("label"); 
+        noDate.textContent = "No Date"; 
+        card.appendChild(noDate); 
+    }
+
     card.appendChild(time); // change
-    
-    
+    card.append(menuWrapper); 
 
     /*NEED TO ADD DESCRIPTION TO TASK CARD--NEXT ROW!*/ 
     // const description = document.createElement("p"); 
@@ -335,7 +393,8 @@ function addTask(title, priority, dueDate, daily, recurring) {
         daily: daily, 
         recurring: false, 
         description: taskDescription.value, 
-        time: taskTime.value // can't put a comma here
+        time: taskTime.value, 
+        category: ""  // can't put a comma here
     }; 
     tasks.push(task); 
     saveTasks(); 
